@@ -1,6 +1,8 @@
 package com.android.newpos.store.sdk.demo.ota
 
+import android.app.Application
 import com.android.newpos.store.sdk.demo.base.BaseViewModel
+import java.lang.Appendable
 
 /**
  * @ClassName : OTAViewModel
@@ -11,5 +13,5 @@ import com.android.newpos.store.sdk.demo.base.BaseViewModel
  * @Description :
  * @website : <a href="https://www.newpostech.com/">...</a>
  */
-class OTAViewModel: BaseViewModel(title = "OTA Upgrade") {
+class OTAViewModel(application: Application): BaseViewModel(title = "OTA Upgrade",application) {
 }

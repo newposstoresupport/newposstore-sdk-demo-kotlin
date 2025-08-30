@@ -1,5 +1,6 @@
 package com.android.newpos.store.sdk.demo.inquirer
 
+import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import com.android.newpos.store.sdk.demo.base.BaseViewModel
 import com.newpos.store.android.sdk.base.BaseApi
@@ -16,7 +17,7 @@ import com.newpos.store.android.sdk.base.SPreference
  * @Description :
  * @website : <a href="https://www.newpostech.com/">...</a>
  */
-class AppInquirerViewModel: BaseViewModel(title = "App Inquirer") {
+class AppInquirerViewModel(application: Application): BaseViewModel(title = "App Inquirer", application) {
 
     companion object {
         const val key = "key_ready"

@@ -66,9 +66,14 @@ class CloudFragment : BaseFragment(R.layout.fragment_cloud) {
         }
 
         _binding.unRegister.setOnClickListener {
-            requireActivity().unregisterReceiver(cloudMessageReceiver)
-            Toast.makeText(requireContext(), R.string.un_register, Toast.LENGTH_SHORT).show()
-        }  // 取消注册云消息接收器
+            try {
+                requireActivity().unregisterReceiver(cloudMessageReceiver)
+                Toast.makeText(requireContext(), R.string.un_register, Toast.LENGTH_SHORT).show()
+            } catch (e: IllegalArgumentException) {
+                // 通常是 receiver 没注册或已经解绑
+                Toast.makeText(requireContext(), "Receiver unregisted", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     override fun onDestroy() {

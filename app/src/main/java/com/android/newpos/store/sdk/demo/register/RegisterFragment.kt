@@ -1,6 +1,9 @@
 package com.android.newpos.store.sdk.demo.register
 
+import android.text.InputFilter
+import android.text.InputType
 import android.text.TextUtils
+import android.text.method.DigitsKeyListener
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
@@ -51,6 +54,9 @@ class RegisterFragment: BaseFragment(R.layout.fragment_register) {
             val editText = EditText(requireActivity())
             editText.setHint(R.string.client_id_hint)
             editText.setText(AppUtils.getClientId())
+            editText.filters = arrayOf(InputFilter.LengthFilter(30))
+            editText.inputType = InputType.TYPE_CLASS_TEXT
+            editText.keyListener = DigitsKeyListener.getInstance("0123456789")
             AlertDialog.Builder(requireActivity())
                 .setTitle(R.string.app_name)
                 .setView(editText)

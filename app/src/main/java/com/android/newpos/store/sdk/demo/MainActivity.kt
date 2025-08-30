@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.android.newpos.store.sdk.demo.databinding.ActivityMainBinding
 import com.google.android.material.snackbar.Snackbar
 import com.newpos.store.android.sdk.StoreSdk
+import android.os.Environment
+import com.liulishuo.filedownloader.util.FileDownloadUtils
 
 class MainActivity : AppCompatActivity() {
 
@@ -12,6 +14,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        println("MainApplication>>onCreate")
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -32,6 +35,7 @@ class MainActivity : AppCompatActivity() {
                 .replace(R.id.container, MainFragment())
                 .commit()
 
+        FileDownloadUtils.setDefaultSaveRootPath(getFilesDir().getAbsolutePath())
         //TODO 跳转github
     }
 }

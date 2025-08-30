@@ -1,5 +1,6 @@
 package com.android.newpos.store.sdk.demo.param
 
+import android.app.Application
 import android.os.Build
 import android.os.Environment
 import androidx.lifecycle.MutableLiveData
@@ -29,7 +30,7 @@ import java.nio.file.Paths
  * @website : <a href="https://www.newpostech.com/">...</a>
  */
 //
-class ParamViewModel : BaseViewModel(title = "Download Parameters") {
+class ParamViewModel(application: Application) : BaseViewModel(title = "Download Parameters",application) {
     public val mInfo: MutableLiveData<String> = MutableLiveData()
     private lateinit var appResponseList: List<AppResponse>
     public val paramDownloadResponseMutableLiveData: MutableLiveData<ParamDownloadResponse> =

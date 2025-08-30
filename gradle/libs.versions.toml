@@ -1,5 +1,8 @@
 [versions]
 agp = "8.6.0"
+#apiVersion = "1.0.0"
+apiVersion = "1.0.1"#升级1.0.1支持RKI接入
+aidlVersion = "1.1"
 gsonVersion = "2.9.0"
 kotlin = "1.9.0"
 coreKtx = "1.10.1"
@@ -7,6 +10,7 @@ junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
 appcompat = "1.6.1"
+filedownloader = "1.7.7"
 material = "1.10.0"
 constraintlayout = "2.1.4"
 lifecycleLivedataKtx = "2.6.1"
@@ -25,6 +29,7 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+filedownloader = { module = "com.liulishuo.filedownloader:library", version.ref = "filedownloader" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 androidx-lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycleLivedataKtx" }
@@ -32,6 +37,8 @@ androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifec
 androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
 androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigationUiKtx" }
 mmkv = { module = "com.tencent:mmkv", version.ref = "mmkv" }
+newposstoresupport-api = { module = "io.github.newposstoresupport:api", version.ref = "apiVersion" }
+newposstoresupport-aidl = { module = "io.github.newposstoresupport:aidl", version.ref = "aidlVersion" }
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 okhttp3-logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp" }
 

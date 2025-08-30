@@ -75,4 +75,22 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="update_success">Update Client ID Success!</string>
+
+    <string name="common">Common Functions</string>
+
+    <string name="menu_common">Common Functions</string>
+    <string name="menu_common_detail">NEWSTORE provides information about calling NEWSTORE, opening the target menu page, opening the download list, opening system updates, etc.</string>
+    <string name="open_app_detail">Open the Store app page</string>
+    <string name="open_download_list">Open the download list</string>
+    <string name="open_system_update">Open the system update</string>
+
+    <string name="menu_app">App Management</string>
+    <string name="menu_app_detail">Application version query, application version download, application update installation, etc.</string>
+    <string name="get_apps">Query all applications</string>
+    <string name="check_for_update">check for update</string>
+    <string name="download_update">download update</string>
+    <string name="install_update">install update</string>
+    <string name="check_firstly">Please check the new version firstly!</string>
+    <string name="start_download">Download of %s has started</string>
+    <string name="download">download</string>
 </resources>

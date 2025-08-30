@@ -22,7 +22,7 @@ import kotlinx.coroutines.cancel
  * @Description :
  * @website : <a href="https://www.newpostech.com/">...</a>
  */
-open class BaseViewModel(title: String): ViewModel() {
+open class BaseViewModel(title: String, application: Application): AndroidViewModel(Application()) {
     val mText: MutableLiveData<String> = MutableLiveData<String>().apply { value = title }
 
     val mDialog = MutableLiveData<String>()

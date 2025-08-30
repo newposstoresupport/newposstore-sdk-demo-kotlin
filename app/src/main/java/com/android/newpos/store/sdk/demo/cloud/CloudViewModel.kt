@@ -1,5 +1,6 @@
 package com.android.newpos.store.sdk.demo.cloud
 
+import android.app.Application
 import com.android.newpos.store.sdk.demo.base.BaseViewModel
 
 /**
@@ -11,5 +12,5 @@ import com.android.newpos.store.sdk.demo.base.BaseViewModel
  * @Description :
  * @website : <a href="https://www.newpostech.com/">...</a>
  */
-class CloudViewModel: BaseViewModel(title = "Cloud Message") {
+class CloudViewModel(application: Application): BaseViewModel("Cloud Message",application ) {
 }

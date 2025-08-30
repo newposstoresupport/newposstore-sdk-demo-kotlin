@@ -6,6 +6,11 @@ import android.text.TextUtils
 import android.widget.Toast
 import com.android.newpos.store.sdk.demo.base.AppUtils
 import com.android.newpos.store.sdk.demo.inquirer.AppInquirerViewModel
+import com.liulishuo.filedownloader.FileDownloader
+import com.liulishuo.filedownloader.connection.FileDownloadUrlConnection
+import com.liulishuo.filedownloader.services.DefaultIdGenerator
+import com.liulishuo.filedownloader.util.FileDownloadUtils
+import com.liulishuo.filedownloader.util.FileDownloadUtils.formatString
 import com.newpos.store.android.sdk.IAppInquirer
 import com.newpos.store.android.sdk.StoreSdk
 import com.newpos.store.android.sdk.base.SPreference
@@ -13,6 +18,7 @@ import com.newpos.store.android.sdk.dto.AppElements
 import com.newpos.store.android.sdk.dto.AuthenticationRequest
 import com.newpos.store.android.sdk.listener.IStoreCallback
 import com.tencent.mmkv.MMKV
+
 
 /**
  * @ClassName : MainApplication
@@ -24,10 +30,12 @@ import com.tencent.mmkv.MMKV
  * @website : <a href="https://www.newpostech.com/">...</a>
  */
 class MainApplication: Application() {
+
     override fun onCreate() {
         super.onCreate()
         mainApplication = this
         MMKV.initialize(this)
+        initDownloader()
         initStoreSdk(AppUtils.getClientId())
         SPreference.I().init(applicationContext)
     }
@@ -76,6 +84,30 @@ class MainApplication: Application() {
                 return isReady
             }
         });
+    }
+
+    private fun initDownloader() {
+        FileDownloader.setupOnApplicationOnCreate(this)
+            .connectionCreator(
+                FileDownloadUrlConnection.Creator(
+                    FileDownloadUrlConnection.Configuration()
+                        .connectTimeout(15000) // set connection timeout.
+                        .readTimeout(15000) // set read timeout.
+                )
+            ).idGenerator(object : DefaultIdGenerator() {
+                override fun transOldId(
+                    oldId: Int,
+                    url: String,
+                    path: String,
+                    pathAsDirectory: Boolean
+                ): Int {
+                    return generateId(url, path, pathAsDirectory)
+                }
+
+                override fun generateId(url: String, path: String, pathAsDirectory: Boolean): Int {
+                    return FileDownloadUtils.md5(formatString("path:%s", path)).hashCode()
+                }
+            })
     }
 
     companion object {

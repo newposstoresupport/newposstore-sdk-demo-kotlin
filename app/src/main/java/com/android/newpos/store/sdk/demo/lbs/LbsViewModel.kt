@@ -1,5 +1,6 @@
 package com.android.newpos.store.sdk.demo.lbs
 
+import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.android.newpos.store.sdk.demo.base.BaseViewModel
@@ -22,7 +23,7 @@ import kotlinx.coroutines.withContext
  * @Description :
  * @website : <a href="https://www.newpostech.com/">...</a>
  */
-class LbsViewModel : BaseViewModel(title = "LBS Location") {
+class LbsViewModel(application: Application) : BaseViewModel(title = "LBS Location",application) {
 
     val mLocation = MutableLiveData<String>()
 

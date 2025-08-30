@@ -1,3 +1,7 @@
+import java.text.SimpleDateFormat
+import java.util.Date
+
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -56,18 +60,19 @@ android {
     }
     android.applicationVariants.all {
         val buildType = this.buildType.name
+        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
         outputs.all {
             if (this is com.android.build.gradle
                 .internal.api.ApkVariantOutputImpl) {
                 this.outputFileName = "NewStoreSdkDemoKotlin+" +
-                        "_${android.defaultConfig.versionName}_${buildType}.apk"
+                        "_${android.defaultConfig.versionName}_${buildType}.apk" +
+                        "_${timeStamp}.apk"
             }
         }
     }
 }
 
 dependencies {
-
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -90,8 +95,8 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.okhttp3.logging.interceptor)
     implementation(libs.google.gson)
-
-    //Use Maven Central instead...
-    implementation(files("libs/api-debug.aar"))
-    implementation(files("libs/storesdk-aidl-v1.1.jar"))
+    implementation(libs.newposstoresupport.api)
+    implementation(libs.newposstoresupport.aidl)
+    implementation(libs.filedownloader)
+    implementation(files("libs/android-baserecyle-master-v1.1.aar"))
 }

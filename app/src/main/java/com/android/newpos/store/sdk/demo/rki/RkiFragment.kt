@@ -1,15 +1,15 @@
 package com.android.newpos.store.sdk.demo.rki
 
+import android.annotation.SuppressLint
+import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import com.android.newpos.store.sdk.demo.R
-import com.android.newpos.store.sdk.demo.base.AppUtils
 import com.android.newpos.store.sdk.demo.base.BaseFragment
 import com.android.newpos.store.sdk.demo.base.BaseViewModel
 import com.android.newpos.store.sdk.demo.base.viewBinding
 import com.android.newpos.store.sdk.demo.databinding.FragmentRkiBinding
 import com.newpos.store.android.sdk.StoreSdk
-import com.newpos.store.android.sdk.base.BaseLog
 
 /**
  * @ClassName : RkiFragment
@@ -21,14 +21,14 @@ import com.newpos.store.android.sdk.base.BaseLog
  * @website : <a href="https://www.newpostech.com/">...</a>
  */
 class RkiFragment : BaseFragment(R.layout.fragment_rki) {
+
     private val _binding by viewBinding(FragmentRkiBinding::bind)
 
     private val rkiViewModel: RkiViewModel by viewModels()
-    override fun getVM(): BaseViewModel = rkiViewModel
+    override fun getVM(): RkiViewModel = rkiViewModel
 
     override fun init() {
         super.init()
-
         _binding.bind.setOnClickListener {
             val result = StoreSdk.getInstance().rkiAbility().bindRkiService()
             Toast.makeText(
@@ -44,15 +44,25 @@ class RkiFragment : BaseFragment(R.layout.fragment_rki) {
                 R.string.download_customer_keys_prompt,
                 Toast.LENGTH_SHORT
             ).show()
-            val kdhUrl = "http://10.1.42.63:6700/rki/" //from newstore platform
-            StoreSdk.getInstance().rkiAbility().downloadCustomerKeys(
-                AppUtils.getClientId(),
-                kdhUrl,
-                ""
-            ) { code, message, keyList ->
-                BaseLog.d("onDownload:$code $message $keyList");
-            }
+
+            rkiViewModel.download()
         }
 
+        getVM().mKdh.observe(viewLifecycleOwner) { text ->
+            appendLog(text)
+        }
     }
+
+    @SuppressLint("SetTextI18n")
+    fun appendLog(text: String) {
+        val old: String = _binding.tvRkiResult.text.toString()
+        _binding.tvRkiResult.setText(
+            """
+            $old
+            $text
+        """.trimIndent()
+        )
+        _binding.scrollResult.post { _binding.scrollResult.fullScroll(View.FOCUS_DOWN) }
+    }
+
 }
