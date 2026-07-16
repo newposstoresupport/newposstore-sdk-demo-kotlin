@@ -122,7 +122,4 @@ dependencies {
     implementation(libs.newposstoresupport.aidl)
     implementation(libs.filedownloader)
     implementation(files("libs/android-baserecyle-master-v1.1.aar"))
-
-    // ROM SDK：固件查询依赖 DevConfig / SDKManager
-    compileOnly(files("libs/sdk.jar"))
 }
