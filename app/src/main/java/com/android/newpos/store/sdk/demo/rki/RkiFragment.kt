@@ -2,14 +2,12 @@ package com.android.newpos.store.sdk.demo.rki
 
 import android.annotation.SuppressLint
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import com.android.newpos.store.sdk.demo.R
 import com.android.newpos.store.sdk.demo.base.BaseFragment
-import com.android.newpos.store.sdk.demo.base.BaseViewModel
+import com.android.newpos.store.sdk.demo.base.ToastUtils.showToast
 import com.android.newpos.store.sdk.demo.base.viewBinding
 import com.android.newpos.store.sdk.demo.databinding.FragmentRkiBinding
-import com.newpos.store.android.sdk.StoreSdk
 
 /**
  * @ClassName : RkiFragment
@@ -29,39 +27,21 @@ class RkiFragment : BaseFragment(R.layout.fragment_rki) {
 
     override fun init() {
         super.init()
-        _binding.bind.setOnClickListener {
-            val result = StoreSdk.getInstance().rkiAbility().bindRkiService()
-            Toast.makeText(
-                requireContext(),
-                if (result) "bind success" else "bind failed",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
+        _binding.bind.setOnClickListener { getVM().bind() }
 
-        _binding.downloadCustomer.setOnClickListener {
-            Toast.makeText(
-                requireContext(),
-                R.string.download_customer_keys_prompt,
-                Toast.LENGTH_SHORT
-            ).show()
+        _binding.downloadCustomer.setOnClickListener {rkiViewModel.download()}
 
-            rkiViewModel.download()
-        }
-
-        getVM().mKdh.observe(viewLifecycleOwner) { text ->
-            appendLog(text)
-        }
+        getVM().mKdh.observe(viewLifecycleOwner) {text -> appendLog(text)}
     }
 
     @SuppressLint("SetTextI18n")
     fun appendLog(text: String) {
-        val old: String = _binding.tvRkiResult.text.toString()
-        _binding.tvRkiResult.setText(
-            """
-            $old
-            $text
-        """.trimIndent()
-        )
+        val old = _binding.tvRkiResult.text.toString()
+        _binding.tvRkiResult.text = if (old.isEmpty()) {
+            text
+        } else {
+            "$old\n$text"
+        }
         _binding.scrollResult.post { _binding.scrollResult.fullScroll(View.FOCUS_DOWN) }
     }
 
