@@ -9,7 +9,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
-import com.android.newpos.store.sdk.demo.MainApplication
 import com.android.newpos.store.sdk.demo.R
 import com.android.newpos.store.sdk.demo.base.AppUtils
 import com.android.newpos.store.sdk.demo.base.BaseFragment
@@ -33,7 +32,7 @@ class RegisterFragment: BaseFragment(R.layout.fragment_register) {
 
     //you should put business code into viewmodel
     private val registerViewModel: RegisterViewModel by viewModels()
-    override fun getVM(): BaseViewModel = registerViewModel
+    override fun getVM(): RegisterViewModel = registerViewModel
 
     override fun init() {
         super.init()
@@ -41,14 +40,11 @@ class RegisterFragment: BaseFragment(R.layout.fragment_register) {
         BaseLog.d("RegisterFragment _binding: $_binding")
         BaseLog.d("RegisterFragment registerViewModel: $registerViewModel")
 
-        registerViewModel.testCoroutines()
 
         val clientIdView: TextView = _binding.clientIdView
         clientIdView.text = AppUtils.getClientId()
 
-        _binding.register.setOnClickListener {
-            MainApplication.getInstance().initStoreSdk(AppUtils.getClientId())
-        }
+        _binding.register.setOnClickListener { getVM().register() }
 
         _binding.clientId.setOnClickListener {
             val editText = EditText(requireActivity())

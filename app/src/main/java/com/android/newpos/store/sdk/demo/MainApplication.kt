@@ -3,8 +3,10 @@ package com.android.newpos.store.sdk.demo
 import android.app.Application
 import android.os.RemoteException
 import android.text.TextUtils
-import android.widget.Toast
+import com.android.newpos.store.sdk.demo.base.InitCallback
+import com.android.newpos.store.sdk.demo.base.LoadingDialogManage
 import com.android.newpos.store.sdk.demo.base.AppUtils
+import com.android.newpos.store.sdk.demo.base.ToastUtils.showToast
 import com.android.newpos.store.sdk.demo.inquirer.AppInquirerViewModel
 import com.liulishuo.filedownloader.FileDownloader
 import com.liulishuo.filedownloader.connection.FileDownloadUrlConnection
@@ -17,7 +19,13 @@ import com.newpos.store.android.sdk.base.SPreference
 import com.newpos.store.android.sdk.dto.AppElements
 import com.newpos.store.android.sdk.dto.AuthenticationRequest
 import com.newpos.store.android.sdk.listener.IStoreCallback
+import com.pos.device.SDKManager
 import com.tencent.mmkv.MMKV
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 /**
@@ -33,21 +41,32 @@ class MainApplication: Application() {
 
     override fun onCreate() {
         super.onCreate()
+        println("MainApplication>>onCreate")
         mainApplication = this
         MMKV.initialize(this)
-        initDownloader()
-        initStoreSdk(AppUtils.getClientId())
         SPreference.I().init(applicationContext)
+        val appScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+        appScope.launch {
+            try {
+                withContext(Dispatchers.IO) {
+                    initDownloader()
+                    initStoreSdk(AppUtils.getClientId(), null)
+                }
+            } catch (e: Throwable) {
+                e.printStackTrace()
+            }
+        }
+        SDKManager.init(applicationContext) {}
     }
 
-    fun initStoreSdk(clientId: String?){
+    fun initStoreSdk(clientId: String?, callback: InitCallback? = null) {
         //TODO step 2
         // download newpos store sdk from github
         // and init StoreSdk by appid & appkey & appsecret
         val elements = AppElements().apply {
-            appId = APPID
-            appKey = APPKEY
-            appSecret = APPSECRET
+            appId = BuildConfig.APPID
+            appKey = BuildConfig.APPKEY
+            appSecret = BuildConfig.APPSECRET
         }
 
         val request: AuthenticationRequest? = if(!TextUtils.isEmpty(clientId)){
@@ -60,15 +79,14 @@ class MainApplication: Application() {
         //TODO Recommendation: Initialize the interface only once in the application
         StoreSdk.getInstance().init(applicationContext, elements, request, object : IStoreCallback {
             override fun initSuccess() {
-                Toast.makeText(applicationContext, R.string.init_success, Toast.LENGTH_SHORT).show()
+                showToast(R.string.init_success)
                 initAppInquirer()
+                callback?.onFinished()
             }
 
             override fun initFailed(remoteException: RemoteException) {
-                Toast.makeText(applicationContext,
-                    "${remoteException.message}\n${getString(R.string.newstore_lost)}",
-                    Toast.LENGTH_SHORT).show()
-                //showDialog(message)
+                showToast(remoteException.message + getString(R.string.newstore_lost))
+                callback?.onFinished()
             }
         })
     }
@@ -111,13 +129,13 @@ class MainApplication: Application() {
     }
 
     companion object {
-        //TODO step 1
-        // make sure to replace with your own appid & appkey & appsecret
-        private const val APPID = "32292cc7e05a2b86ddea1d6746210283"
-        private const val APPKEY = "c3ff54daf66bbbd2e8d8dbf08172a5aa"
-        private const val APPSECRET = "a8e2188e9474692ea6a538f0a4f955ab"
-
         private var mainApplication: MainApplication? = null
+        val ld: LoadingDialogManage? = null
+
+        @JvmStatic
         fun getInstance() = mainApplication!!
+
+        @JvmStatic
+        fun getContext() = mainApplication?.applicationContext
     }
 }

@@ -3,15 +3,15 @@ package com.android.newpos.store.sdk.demo.base
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.newpos.store.android.sdk.base.BaseException
 import com.newpos.store.android.sdk.base.BaseLog
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+
 
 /**
  * @ClassName : BaseViewModel
@@ -24,9 +24,10 @@ import kotlinx.coroutines.cancel
  */
 open class BaseViewModel(title: String, application: Application): AndroidViewModel(Application()) {
     val mText: MutableLiveData<String> = MutableLiveData<String>().apply { value = title }
-
+    val mLoading: MutableLiveData<LoadingOption> = MutableLiveData<LoadingOption>()
     val mDialog = MutableLiveData<String>()
     var executorService: ExecutorService? = null
+
 
     fun getService(): ExecutorService {
         if (executorService == null) {
@@ -35,8 +36,9 @@ open class BaseViewModel(title: String, application: Application): AndroidViewMo
         return executorService!!
     }
 
-    // 协程作用域，替代RxJava进行异步任务管理
     protected val viewModelScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+
+    fun getLoading(): MutableLiveData<LoadingOption> =  mLoading
 
 
     fun getText(): MutableLiveData<String> {
@@ -47,14 +49,19 @@ open class BaseViewModel(title: String, application: Application): AndroidViewMo
         return mDialog
     }
 
-
     protected open fun showError(throwable: Throwable) {
+        dismissLoading()
         var msg = throwable.message
         if (throwable is BaseException) {
             msg = throwable.msg
         }
         mDialog.postValue(msg!!)
     }
+
+    fun showLoading(msg: LoadingOption)  = mLoading.postValue(msg)
+
+    fun dismissLoading()  = mLoading.postValue(LoadingOption(false))
+
 
     override fun onCleared() {
         super.onCleared()

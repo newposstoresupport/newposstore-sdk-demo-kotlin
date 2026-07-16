@@ -11,11 +11,11 @@ import android.graphics.Color
 import android.os.Build
 import android.text.TextUtils
 import android.util.Log
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.android.newpos.store.sdk.demo.R
 import com.android.newpos.store.sdk.demo.base.AppUtils
+import com.android.newpos.store.sdk.demo.base.ToastUtils.showToast
 import com.newpos.store.android.sdk.Constant
 import com.newpos.store.android.sdk.StoreSdk
 import com.newpos.store.android.sdk.base.BaseLog
@@ -63,6 +63,10 @@ class CloudMessageReceiver : BroadcastReceiver() {
                 val bubble = bundle.getBoolean(Constant.CM_BADGE)
                 sendNotification(context, title, content, sound, bubble)
             }
+            if (Constant.CLOUD_MESSAGE_TYPE_DOWN_PARAM == cmd) {
+                val msgId = bundle.getString(Constant.CM_MSGID)
+                AppUtils.startDownloadWorker(context, msgId)
+            }
             if (Constant.CLOUD_MESSAGE_TYPE_RKI_DOWN_CUSTOMER_KEYS == cmd) {
                 val config = jsonObject.getJSONObject("config")
                 val kdhUrl = config.getString("kdhUrl")
@@ -70,7 +74,7 @@ class CloudMessageReceiver : BroadcastReceiver() {
                 if (TextUtils.isEmpty(kdhUrl)) return
                 StoreSdk.getInstance().rkiAbility()
                     .downloadCustomerKeys(AppUtils.getClientId(), kdhUrl, messageId) { code, message, keyList ->
-                        Toast.makeText(context, "onDownload:$code,$message,$keyList", Toast.LENGTH_SHORT).show()
+                       showToast("onDownload:$code,$message,$keyList")
                     }
             }
         } catch (e: JSONException) {

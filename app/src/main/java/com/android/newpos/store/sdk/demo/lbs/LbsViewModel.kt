@@ -2,7 +2,7 @@ package com.android.newpos.store.sdk.demo.lbs
 
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import com.android.newpos.store.sdk.demo.base.LoadingOption
 import com.android.newpos.store.sdk.demo.base.BaseViewModel
 import com.newpos.store.android.sdk.StoreSdk
 import com.newpos.store.android.sdk.base.BaseUtils
@@ -26,9 +26,13 @@ import kotlinx.coroutines.withContext
 class LbsViewModel(application: Application) : BaseViewModel(title = "LBS Location",application) {
 
     val mLocation = MutableLiveData<String>()
+    var logs = MutableLiveData<String>()
 
     fun getLocation() {
         mLocation.postValue("Retrieving location information...")
+        logs.postValue("Retrieving location information...")
+
+        //TODO: Change to your own parameters
         val lbsLocationRequest = LbsLocationRequest().apply {
             output = "json"
             mnc = "0"
@@ -37,41 +41,33 @@ class LbsViewModel(application: Application) : BaseViewModel(title = "LBS Locati
             mcc = "460"
             lac = "9763"
             radio = "LTE"
-        }  // 创建 LbsLocationRequest 对象并设置参数
-
-//        addSubscribe(
-//            Observable.just(lbsLocationRequest)
-//                .observeOn(Schedulers.io())
-//                .map {it -> StoreSdk.getInstance().lbsAbility().getLocation(it, false) }
-//                .subscribe({ response ->
-//                    if (response == null) {  // 判断返回结果是否为空
-//                        mLocation.postValue("get location failed, please check log!")
-//                        return@subscribe // 提前返回
-//                    }
-//                    mLocation.postValue(BaseUtils.toJson(response))
-//                }, { throwable -> showError(throwable) })
-//        )
-
-
+        }
+        showLoading(LoadingOption("Retrieving location information..."))
         viewModelScope.launch {
             try {
                 val response = withContext(Dispatchers.IO) {
-                    // 如果 getLocation 是阻塞方法，直接这样包一层
                     StoreSdk.getInstance().lbsAbility().getLocation(lbsLocationRequest, false)
                 }
                 if (response == null) {
                     mLocation.postValue("get location failed, please check log!")
+                    logs.postValue("get location failed, please check log!")
+                    return@launch
                 } else {
                     mLocation.postValue(BaseUtils.toJson(response))
+                    logs.postValue("get location success: $response")
                 }
             } catch (e: Exception) {
                 showError(e)
+            }finally {
+                dismissLoading()
             }
         }
     }
 
     override fun showError(throwable: Throwable) {
         super.showError(throwable)
-        mLocation.postValue("")  // 清空位置显示
+        mLocation.postValue("")
+        logs.postValue("LBS Error: " + throwable.message)
     }
+
 }
