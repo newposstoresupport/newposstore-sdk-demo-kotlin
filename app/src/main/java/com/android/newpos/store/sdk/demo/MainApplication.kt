@@ -19,7 +19,7 @@ import com.newpos.store.android.sdk.base.SPreference
 import com.newpos.store.android.sdk.dto.AppElements
 import com.newpos.store.android.sdk.dto.AuthenticationRequest
 import com.newpos.store.android.sdk.listener.IStoreCallback
-import com.pos.device.SDKManager
+import com.android.newpos.store.sdk.demo.base.RomDeviceReflect
 import com.tencent.mmkv.MMKV
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -56,7 +56,8 @@ class MainApplication: Application() {
                 e.printStackTrace()
             }
         }
-        SDKManager.init(applicationContext) {}
+        // ROM 设备 SDK：不依赖公开 sdk.jar，运行时反射调用
+        RomDeviceReflect.initSdkManager(applicationContext)
     }
 
     fun initStoreSdk(clientId: String?, callback: InitCallback? = null) {

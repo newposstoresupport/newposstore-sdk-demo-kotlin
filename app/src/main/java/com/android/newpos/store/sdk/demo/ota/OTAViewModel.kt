@@ -18,7 +18,7 @@ import com.newpos.store.android.sdk.StoreSdk
 import com.newpos.store.android.sdk.dto.Firmware
 import com.newpos.store.android.sdk.dto.FirmwareInfo
 import com.newpos.store.android.sdk.dto.QueryFirmwareRequest
-import com.pos.device.config.DevConfig
+import com.android.newpos.store.sdk.demo.base.RomDeviceReflect
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -39,9 +39,9 @@ class OTAViewModel(application: Application) : BaseViewModel(title = "OTA Upgrad
                 val info = withContext(Dispatchers.IO) {
                     val firmwareRequest = QueryFirmwareRequest()
                     val firmware = Firmware()
-                    firmware.custom = DevConfig.CUSTOMER.NAME
-                    firmware.firmwareId = DevConfig.getFirmwareId()
-                    firmware.version = DevConfig.getFirmwareVersion()
+                    firmware.custom = RomDeviceReflect.getCustomerName()
+                    firmware.firmwareId = RomDeviceReflect.getFirmwareId()
+                    firmware.version = RomDeviceReflect.getFirmwareVersion()
                     firmwareRequest.firmware = firmware
                     StoreSdk.getInstance().otaAbility().queryFirmware(firmwareRequest)
                 }

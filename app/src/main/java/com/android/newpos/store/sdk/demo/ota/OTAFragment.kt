@@ -23,7 +23,7 @@ class OTAFragment : BaseFragment(R.layout.fragment_ota) {
         _binding.query.setOnClickListener { otaViewModel.queryFirmware() }
         _binding.download.setOnClickListener { otaViewModel.downloadFirmware() }
         _binding.install.setOnClickListener {
-            // SystemManager.updateFirmware() — 按终端 ROM 能力自行接入
+            // 安装固件请按终端 ROM 能力自行接入（不依赖公开 sdk.jar）
         }
 
         otaViewModel.mInfo.observe(viewLifecycleOwner) { content ->
